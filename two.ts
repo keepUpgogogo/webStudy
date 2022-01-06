@@ -42,8 +42,6 @@ class ChainList {
 const list1 = new ChainList();
 
 list1.append(1);
-list1.append(1);
-list1.append(3);
-list1.append(2);
+
 console.dir(list1);
 //npx tsc one.ts
