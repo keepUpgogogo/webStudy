@@ -40,8 +40,33 @@ class ChainList {
 }
 
 const list1 = new ChainList();
-
 list1.append(1);
+list1.append(2);
+list1.append(3);
 
-console.dir(list1);
-//npx tsc one.ts
+//反转链表
+function reverse<T>(list: T): void {
+  let pre: T = list["head"];
+  let after: T | null = pre["next"];
+  let broker: T | null;
+  pre["next"] = null;
+  while (after) {
+    broker = after["next"];
+    after["next"] = pre;
+    pre = after;
+    after = broker;
+  }
+  list["head"] = pre;
+}
+
+//从头到尾打印链表
+function printList<T>(listObj: T): Array<unknown> {
+  let arr: Array<unknown> = [];
+  let first: T = listObj["head"];
+  while (first) {
+    arr.unshift(first["val"]);
+    first = first["next"];
+  }
+  return arr;
+}
+// console.dir(printList(list1));
