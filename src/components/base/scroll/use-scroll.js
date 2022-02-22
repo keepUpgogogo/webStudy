@@ -5,14 +5,12 @@ import {
   onUnmounted,
   ref
 } from 'vue'
-
 BScroll.use(ObserveDOM)
-export default function useScroll(wrapperRef, options) {
+export default function (wrapperRef, options) {
   const scroll = ref(null)
-
   onMounted(() => {
     scroll.value = new BScroll(wrapperRef.value, {
-      ObserveDOM: true,
+      observeDOM: true,
       ...options
     })
   })

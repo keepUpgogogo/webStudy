@@ -10,9 +10,9 @@ import {
 } from 'vue'
 
 BScroll.use(Slide)
-
 export default function useSlider(wrapperRef) {
   const slider = ref(null)
+
   const currentPageIndex = ref(0)
 
   onMounted(() => {
