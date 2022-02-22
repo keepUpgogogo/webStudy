@@ -18,6 +18,7 @@
     "sass-loader": "^10.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
+    "vue3-lazy": "^1.0.0-alpha.1",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

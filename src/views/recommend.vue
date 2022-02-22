@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend" v-loading:[loadingText]="loading">
     <scroll class="recommend-content">
       <div>
         <div class="slider-wrapper">
@@ -12,7 +12,7 @@
           <ul>
             <li v-for="item in albums" class="item" :key="item.id">
               <div class="icon">
-                <img width="60" height="60" :src="item.pic" />
+                <img width="60" height="60" v-lazy="item.pic" />
               </div>
               <div class="text">
                 <h2 class="name">
@@ -41,7 +41,13 @@ export default {
     return {
       sliders: [],
       albums: [],
+      loadingText: "载入...",
     };
+  },
+  computed: {
+    loading() {
+      return !this.sliders.length && !this.albums.length;
+    },
   },
   async created() {
     const result = await getRecommend();

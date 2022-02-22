@@ -134,13 +134,22 @@ function registerRecommend(app) {
 
     // 构造请求 data 参数
     const data = JSON.stringify({
-      comm: { ct: 24 },
+      comm: {
+        ct: 24
+      },
       recomPlaylist: {
         method: 'get_hot_recommend',
-        param: { async: 1, cmd: 2 },
+        param: {
+          async: 1,
+          cmd: 2
+        },
         module: 'playlist.HotRecommendServer'
       },
-      focus: { module: 'music.musicHall.MusicHallPlatform', method: 'GetFocus', param: {} }
+      focus: {
+        module: 'music.musicHall.MusicHallPlatform',
+        method: 'GetFocus',
+        param: {}
+      }
     })
 
     // 随机数值
@@ -197,13 +206,15 @@ function registerRecommend(app) {
         }
 
         // 往前端发送一个标准格式的响应数据，包括成功错误码和数据
-        res.json({
-          code: ERR_OK,
-          result: {
-            sliders,
-            albums
-          }
-        })
+        setTimeout(() => {
+          res.json({
+            code: ERR_OK,
+            result: {
+              sliders,
+              albums
+            }
+          })
+        }, 1000);
       } else {
         res.json(data)
       }
@@ -218,11 +229,21 @@ function registerSingerList(app) {
     const HOT_NAME = '热'
 
     const data = JSON.stringify({
-      comm: { ct: 24, cv: 0 },
+      comm: {
+        ct: 24,
+        cv: 0
+      },
       singerList: {
         module: 'Music.SingerListServer',
         method: 'get_singer_list',
-        param: { area: -100, sex: -100, genre: -100, index: -100, sin: 0, cur_page: 1 }
+        param: {
+          area: -100,
+          sex: -100,
+          genre: -100,
+          index: -100,
+          sin: 0,
+          cur_page: 1
+        }
       }
     })
 
@@ -317,10 +338,18 @@ function registerSingerDetail(app) {
     const url = 'https://u.y.qq.com/cgi-bin/musics.fcg'
 
     const data = JSON.stringify({
-      comm: { ct: 24, cv: 0 },
+      comm: {
+        ct: 24,
+        cv: 0
+      },
       singerSongList: {
         method: 'GetSingerSongList',
-        param: { order: 1, singerMid: req.query.mid, begin: 0, num: 100 },
+        param: {
+          order: 1,
+          singerMid: req.query.mid,
+          begin: 0,
+          num: 100
+        },
         module: 'musichall.song_list_server'
       }
     })
@@ -509,8 +538,14 @@ function registerTopList(app) {
     const url = 'https://u.y.qq.com/cgi-bin/musics.fcg'
 
     const data = JSON.stringify({
-      comm: { ct: 24 },
-      toplist: { module: 'musicToplist.ToplistInfoServer', method: 'GetAll', param: {} }
+      comm: {
+        ct: 24
+      },
+      toplist: {
+        module: 'musicToplist.ToplistInfoServer',
+        method: 'GetAll',
+        param: {}
+      }
     })
 
     const randomKey = getRandomVal('recom')
@@ -561,7 +596,10 @@ function registerTopList(app) {
 function registerTopDetail(app) {
   app.get('/api/getTopDetail', (req, res) => {
     const url = 'https://u.y.qq.com/cgi-bin/musics.fcg'
-    const { id, period } = req.query
+    const {
+      id,
+      period
+    } = req.query
 
     const data = JSON.stringify({
       detail: {
@@ -639,7 +677,11 @@ function registerSearch(app) {
   app.get('/api/search', (req, res) => {
     const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
 
-    const { query, page, showSinger } = req.query
+    const {
+      query,
+      page,
+      showSinger
+    } = req.query
 
     const data = {
       _: getRandomVal(),
@@ -700,7 +742,11 @@ function registerSearch(app) {
           }
         }
 
-        const { curnum, curpage, totalnum } = songData
+        const {
+          curnum,
+          curpage,
+          totalnum
+        } = songData
         const hasMore = 20 * (curpage - 1) + curnum < totalnum
 
         res.json({
