@@ -41,7 +41,6 @@ export default {
     return {
       sliders: [],
       albums: [],
-      loadingText: "载入...",
     };
   },
   computed: {

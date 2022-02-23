@@ -14,7 +14,6 @@
     "axios": "^0.25.0",
     "core-js": "^3.6.5",
     "js-base64": "^3.7.2",
-    "pinyin": "^2.10.2",
     "sass-loader": "^10.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
@@ -36,6 +35,8 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^7.0.0",
-    "sass": "^1.26.5"
+    "sass": "^1.26.5",
+    "pinyin": "^2.10.2"
+
   }
 }

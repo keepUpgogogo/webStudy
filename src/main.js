@@ -1,7 +1,10 @@
-import { createApp } from 'vue'
+import {
+  createApp
+} from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+//引入懒加载插件
 import lazyPlugin from 'vue3-lazy'
 import loadingDirective from '@/components/base/loading/directive'
 

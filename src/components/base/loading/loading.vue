@@ -12,7 +12,7 @@ export default {
   name: "loading",
   data() {
     return {
-      title: "hah",
+      title: "载入中...",
     };
   },
   methods: {
