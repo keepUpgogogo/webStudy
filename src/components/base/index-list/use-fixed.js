@@ -4,19 +4,34 @@ import {
   nextTick,
   computed
 } from 'vue'
+
 export default function useFixed(props) {
   const groupRef = ref(null)
   const listHeights = ref([])
   const scrollY = ref(0)
   const currentIndex = ref(0)
+  const TITLE_HEIGHT = 30
+  //底部表标题距离顶部的距离
+  const distance = ref(0)
+
   const fixedTitle = computed(() => {
     if (scrollY.value < 0) return ''
     const currentGroup = props.data[currentIndex.value]
     return currentGroup ? currentGroup.title : ''
   })
+
   watch(() => props.data, async () => {
     await nextTick()
     calculate()
+  })
+
+  //css效果
+  const fixedStyle = computed(() => {
+    const distanceVal = distance.value
+    const diff = (distanceVal > 0 && distanceVal < TITLE_HEIGHT) ? distanceVal - TITLE_HEIGHT : 0
+    return {
+      transform: `translate3d(0,${diff}px,0)`
+    }
   })
 
   watch(scrollY, (newY) => {
@@ -26,11 +41,13 @@ export default function useFixed(props) {
       const heightBottom = listHeightsVal[i + 1]
       if (newY >= heightTop && newY <= heightBottom) {
         currentIndex.value = i
+        distance.value = heightBottom - newY
       }
     }
   })
 
   function calculate() {
+    //拿到所有的标题节点
     const list = groupRef.value.children
     const listHeightsVal = listHeights.value
     let height = 0
@@ -51,6 +68,8 @@ export default function useFixed(props) {
   return {
     groupRef,
     onScroll,
-    fixedTitle
+    fixedTitle,
+    fixedStyle,
+    currentIndex
   }
 }

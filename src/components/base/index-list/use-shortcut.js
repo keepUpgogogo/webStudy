@@ -1,22 +1,21 @@
-import { ref, computed } from 'vue'
-
+import {
+  computed,
+  ref
+} from "vue"
 export default function useShortcut(props, groupRef) {
   const ANCHOR_HEIGHT = 18
-  const scrollRef = ref(null)
-
+  const scrollRef = ref(0)
   const shortcutList = computed(() => {
     return props.data.map((group) => {
       return group.title
     })
   })
-
   const touch = {}
 
   function onShortcutTouchStart(e) {
-    const anchorIndex = parseInt(e.target.dataset.index)
     touch.y1 = e.touches[0].pageY
+    const anchorIndex = parseInt(e.target.dataset.index)
     touch.anchorIndex = anchorIndex
-
     scrollTo(anchorIndex)
   }
 
@@ -24,10 +23,10 @@ export default function useShortcut(props, groupRef) {
     touch.y2 = e.touches[0].pageY
     const delta = (touch.y2 - touch.y1) / ANCHOR_HEIGHT | 0
     const anchorIndex = touch.anchorIndex + delta
-
     scrollTo(anchorIndex)
   }
 
+  //滚动逻辑
   function scrollTo(index) {
     if (isNaN(index)) {
       return
@@ -37,11 +36,10 @@ export default function useShortcut(props, groupRef) {
     const scroll = scrollRef.value.scroll
     scroll.scrollToElement(targetEl, 0)
   }
-
   return {
     shortcutList,
-    scrollRef,
     onShortcutTouchStart,
+    scrollRef,
     onShortcutTouchMove
   }
 }
