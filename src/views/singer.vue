@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import storage from "good-storage";
+import {SINGER_KEY} from "@/assets/js/constant";
 import { getSingerList } from "@/service/singer";
 import indexList from "@/components/base/index-list/index-list";
 export default {
@@ -27,9 +29,13 @@ export default {
   methods: {
     selectSinger(singer) {
       this.selectedSinger = singer;
+      this.cacheSinger(singer);
       this.$router.push({
         path: `/Singer/${singer.mid}/`,
       });
+    },
+    cacheSinger(singer) {
+      storage.session.set(SINGER_KEY, singer);
     },
   },
 };

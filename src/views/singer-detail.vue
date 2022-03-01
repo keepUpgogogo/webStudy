@@ -1,6 +1,11 @@
 <template>
   <div class="singer-detail">
-    <music-list :songs="songs" :pic="pic" :title="title"></music-list>
+    <music-list
+      :songs="songs"
+      :pic="pic"
+      :title="title"
+      :loading="loading"
+    ></music-list>
   </div>
 </template>
 
@@ -8,6 +13,8 @@
 import { getSingerDetail } from "@/service/singer";
 import { processSongs } from "@/service/song";
 import MusicList from "@/components/base/music-list/music-list";
+import storage from "good-storage";
+import { SINGER_KEY } from "@/assets/js/constant";
 
 export default {
   name: "singer-detail",
@@ -18,20 +25,43 @@ export default {
   data() {
     return {
       songs: [],
+      loading: true,
     };
   },
   computed: {
     pic() {
-      return this.singer && this.singer.pic;
+      const singer = this.computedSinger;
+      return singer && singer.pic;
     },
     title() {
-      return this.singer && this.singer.name;
+      const singer = this.computedSinger;
+      return singer && singer.name;
+    },
+    computedSinger() {
+      let ret = null;
+      const singer = this.singer;
+      if (singer) {
+        ret = singer;
+      } else {
+        const cachedSinger = storage.session.get(SINGER_KEY);
+        if (cachedSinger && cachedSinger.mid === this.$route.params.id) {
+          ret = cachedSinger;
+        }
+      }
+      return ret;
     },
   },
   async created() {
-    const result = await getSingerDetail(this.singer);
-    console.log(result);
+    if (!this.computedSinger) {
+      const path = this.$route.matched[0].path;
+      this.$router.push({
+        path,
+      });
+      return
+    }
+    const result = await getSingerDetail(this.computedSinger);
     this.songs = await processSongs(result.songs);
+    this.loading = false;
   },
 };
 </script>

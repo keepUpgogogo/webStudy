@@ -1,16 +1,22 @@
 <template>
   <div class="music-list">
     <!-- 图标字体-->
-    <div class="back">
+    <div class="back" @click="goBack">
       <i class="icon-back"></i>
     </div>
     <!-- 标题和图片-->
     <h1 class="title">{{ title }}</h1>
-    <div class="bg-image" :style="bgImageStyle">
-      <div class="filter"></div>
+    <div class="bg-image" :style="bgImageStyle" ref="bigImage">
+      <div class="filter" :style="filterStyle"></div>
     </div>
     <!-- 歌曲列表-->
-    <scroll class="list">
+    <scroll
+      class="list"
+      :style="scrollStyle"
+      v-loading="loading"
+      :probe-type="3"
+      @scroll="onScroll"
+    >
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
       </div>
@@ -36,7 +42,9 @@ export default {
       default() {
         return [];
       },
+      scrollY: 0,
     },
+    loading: Boolean,
     title: String,
     pic: String,
   },
@@ -49,10 +57,59 @@ export default {
   },
   computed: {
     bgImageStyle() {
+      const scrollY = this.scrollY;
+      let zIndex = 0;
+      let paddingTop = "70%";
+      let height = 0;
+      let scale = 1;
+
+      if (scrollY < 0) {
+        scale = 1 + Math.abs(scrollY / this.imageHeight);
+      }
+
+      if (scrollY > this.maxTranslateY) {
+        paddingTop = 0;
+        height = `${RESERVED_HEIGHT}px`;
+        zIndex = 10;
+      }
       return {
+        zIndex,
         backgroundImage: `url(${this.pic})`,
+        paddingTop,
+        height,
+        transform: `scale(${scale})`,
       };
     },
+    scrollStyle() {
+      return {
+        top: `${this.imageHeight}px`,
+      };
+    },
+    filterStyle() {
+      let blur = 0;
+      const scrollY = this.scrollY;
+      const imageHeight = this.imageHeight;
+      if (scrollY > 0) {
+        blur =
+          Math.min(this.maxTranslateY / imageHeight, scrollY / imageHeight) * 5;
+      }
+
+      return {
+        backdropFilter: `blur(${blur}px)`,
+      };
+    },
+  },
+  methods: {
+    goBack() {
+      this.$router.back();
+    },
+    onScroll(pos) {
+      this.scrollY = -pos.y;
+    },
+  },
+  mounted() {
+    this.imageHeight = this.$refs.bigImage.clientHeight;
+    this.maxTranslateY = this.imageHeight - RESERVED_HEIGHT;
   },
 };
 </script>
