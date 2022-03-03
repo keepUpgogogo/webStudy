@@ -5,12 +5,17 @@
     v-loading="!singers.length"
     @select="selectSinger"
   ></index-list>
-  <router-view :singer="selectedSinger"></router-view>
+  <!-- 路由的动态载入 -->
+  <router-view v-slot="{ Component }">
+    <transition appear name="slide">
+      <component :is="Component" :data="selectedSinger" />
+    </transition>
+  </router-view>
 </template>
 
 <script>
 import storage from "good-storage";
-import {SINGER_KEY} from "@/assets/js/constant";
+import { SINGER_KEY } from "@/assets/js/constant";
 import { getSingerList } from "@/service/singer";
 import indexList from "@/components/base/index-list/index-list";
 export default {
