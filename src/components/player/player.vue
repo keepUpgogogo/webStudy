@@ -20,7 +20,7 @@
             <i class="icon-next" @click="next"></i>
           </div>
           <div class="icon i-right">
-            <i class="icon-not-favorite"></i>
+            <i @click="toggleFavorite(currentSong)" :class="getFavoriteIcon(currentSong)"></i>
           </div>
         </div>
       </div>
@@ -48,6 +48,7 @@
 import { computed, watch, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import useMode from "./use-mode";
+import useFavorite from "./use-favorite";
 export default {
   name: "player",
   setup() {
@@ -55,7 +56,10 @@ export default {
     const audioRef = ref(null);
     const store = useStore();
     const songReady = ref(false);
-    const { modeIcon,changeMode } = useMode();
+
+    //hooks
+    const { modeIcon, changeMode } = useMode();
+    const { getFavoriteIcon, toggleFavorite } = useFavorite();
     // 计算属性
     //全屏播放属性
     const fullScreen = computed(() => {
@@ -179,7 +183,10 @@ export default {
       error,
       //mode
       modeIcon,
-      changeMode
+      changeMode,
+      //favorite
+      getFavoriteIcon,
+      toggleFavorite,
     };
   },
 };
