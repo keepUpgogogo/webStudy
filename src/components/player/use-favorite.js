@@ -37,7 +37,6 @@ export default function () {
   }
 
   function isFavorite(song) {
-    console.log(favoriteList.value);
     return favoriteList.value.findIndex((item) => {
       return song.id === item.id
     }) > -1
