@@ -3,10 +3,12 @@ import animations from 'create-keyframe-animation'
 
 export default function useAnimation() {
   const cdWrapperRef = ref(null)
+  let entering = false
+  let leaving = false
 
-
-  function enter(el,done) {
-    
+  function enter(el, done) {
+    entering = true
+    if (leaving) afterLeave()
     const { x, y, scale } = getPosAndScale()
 
     const animation = {
@@ -31,12 +33,14 @@ export default function useAnimation() {
   }
 
   function afterEnter() {
+    entering = false
     animations.unregisterAnimation('move')
     cdWrapperRef.value.style.animation = ''
   }
 
   function leave(el, done) {
-    
+    if (entering) afterEnterj()
+    leaving = true
     const { x, y, scale } = getPosAndScale()
     const cdWrapperEl = cdWrapperRef.value
 
@@ -51,6 +55,7 @@ export default function useAnimation() {
   }
 
   function afterLeave() {
+    leaving = false
     const cdWrapperEl = cdWrapperRef.value
 
     cdWrapperEl.style.transition = ''

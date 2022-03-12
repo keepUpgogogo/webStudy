@@ -14,10 +14,17 @@ export default function () {
     return store.state.playMode
   })
   const modeIcon = computed(() => {
-    
+
     const playModeVal = playMode.value
     return playModeVal === PLAY_MODE.sequence ? "icon-sequence" :
       playModeVal === PLAY_MODE.random ? "icon-random" : "icon-loop"
+  })
+
+  const modeText = computed(() => {
+
+    const playModeVal = playMode.value
+    return playModeVal === PLAY_MODE.sequence ? "顺序播放" :
+      playModeVal === PLAY_MODE.random ? "随机播放" : "单曲循环"
   })
 
   function changeMode() {
@@ -25,9 +32,10 @@ export default function () {
     store.dispatch("changeMode", mode)
   }
 
-  
+
   return {
     modeIcon,
-    changeMode
+    changeMode,
+    modeText
   }
 }
