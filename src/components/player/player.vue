@@ -211,23 +211,28 @@ export default {
     //监视属性
     //监视当前播放歌曲的变化
     watch(currentSong, (newSong) => {
-      songReady.value = false;
-      currentTime.value = 0;
       if (!newSong.id || !newSong.url) {
         return;
       }
+      songReady.value = false;
+      currentTime.value = 0;
       const audioEl = audioRef.value;
       audioEl.src = newSong.url;
       audioEl.play();
+      store.commit("setPlayingState", true);
     });
     //监视暂停或者播放
     watch(playing, (newPlaying) => {
       const audioEl = audioRef.value;
-      if (!songReady.value) return;
+
+      if (!songReady.value) {
+        return;
+      }
       if (newPlaying) {
         audioEl.play();
         playLyric();
       } else {
+        console.log("2");
         audioEl.pause();
         stopLyric();
       }
@@ -266,9 +271,6 @@ export default {
         index = list.length - 1;
       }
       store.commit("setCurrentIndex", index);
-      if (!playing.value) {
-        store.commit("setPlayingState", true);
-      }
     }
     //播放下一首
     function next() {
@@ -283,9 +285,6 @@ export default {
         index = 0;
       }
       store.commit("setCurrentIndex", index);
-      if (!playing.value) {
-        store.commit("setPlayingState", true);
-      }
     }
     //循环播放
     function loop() {

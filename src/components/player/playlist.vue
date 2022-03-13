@@ -7,23 +7,44 @@
             <h1 class="title">
               <i class="icon" :class="modeIcon" @click.stop="changeMode"> </i>
               <span class="text">{{ modeText }}</span>
+              <span class="clear" @click.stop="showConfirm">
+                <i class="icon-clear"></i>
+              </span>
             </h1>
           </div>
           <scroll ref="scrollRef" class="list-content">
-            <ul ref="listRef">
-              <li class="item" v-for="song in sequenceList" :key="song.id" @click="selectItem(song)">
+            <transition-group ref="listRef" name="list" tag="ul">
+              <li
+                class="item"
+                v-for="song in sequenceList"
+                :key="song.id"
+                @click="selectItem(song)"
+              >
                 <i class="current" :class="getCurrentIcon(song)"></i>
                 <span class="text">{{ song.name }}</span>
                 <span class="favorite" @click.stop="toggleFavorite(song)">
                   <i :class="getFavoriteIcon(song)"></i>
                 </span>
+                <span
+                  class="delete"
+                  @click.stop="removeSong(song)"
+                  :class="{ disable: removing }"
+                >
+                  <i class="icon-delete"></i>
+                </span>
               </li>
-            </ul>
+            </transition-group>
           </scroll>
           <div class="list-footer" @click="hide">
             <span>关闭</span>
           </div>
         </div>
+        <confirm
+          text="是否清空播放列表"
+          confirm-btn-text="清空"
+          ref="confirmRef"
+          @confirm="confirmClear"
+        ></confirm>
       </div>
     </transition>
   </teleport>
@@ -35,17 +56,21 @@ import { ref, computed, nextTick, watch } from "vue";
 import { useStore } from "vuex";
 import useMode from "./use-mode";
 import useFavorite from "./use-favorite";
+import Confirm from "../base/confirm/confirm.vue";
 
 export default {
   name: "playlist",
   components: {
     Scroll,
+    Confirm,
   },
   setup() {
     const scrollRef = ref(null);
     const visible = ref(false);
     const store = useStore();
     const listRef = ref(null);
+    const removing = ref(false);
+    const confirmRef = ref(null);
     //hook
     const { modeIcon, changeMode, modeText } = useMode();
     const { getFavoriteIcon, toggleFavorite } = useFavorite();
@@ -55,24 +80,25 @@ export default {
     const currentSong = computed(() => store.getters.currentSong);
 
     //watch
-    watch(currentSong,async (newSong)=>{
-      if(!visible.value){
-        return
+    watch(currentSong, async (newSong) => {
+      if (!visible.value || !newSong.id) {
+        return;
       }
-      await nextTick
+      await nextTick;
       scrollToCurrent();
-    })
+    });
     //method
     async function show() {
       visible.value = true;
       await nextTick;
       refreshScroll();
+      scrollToCurrent();
     }
     function hide() {
       visible.value = false;
     }
     function getCurrentIcon(song) {
-      if (currentSong.id === song.id) return "icon-play";
+      if (currentSong.value.id === song.id) return "icon-play";
     }
     function refreshScroll() {
       scrollRef.value.scroll.refresh();
@@ -81,7 +107,7 @@ export default {
       const index = sequenceList.value.findIndex((item) => {
         return currentSong.value.id === item.id;
       });
-      const target = listRef.value.children[index];
+      const target = listRef.value.$el.children[index];
       scrollRef.value.scroll.scrollToElement(target, 300);
     }
     function selectItem(song) {
@@ -92,6 +118,23 @@ export default {
       store.commit("setCurrentIndex", index);
       store.commit("setPlayingState", true);
     }
+    function removeSong(song) {
+      if (removing.value) return;
+      removing.value = true;
+      setTimeout(() => {
+        removing.value = false;
+      }, 300);
+      store.dispatch("removeSong", song);
+      if(!playlist.length) hide()
+    }
+    function showConfirm() {
+      confirmRef.value.show();
+    }
+    function confirmClear() {
+      
+      store.dispatch("clearSongList");
+      hide()
+    }
 
     return {
       //variable
@@ -100,6 +143,8 @@ export default {
       sequenceList,
       scrollRef,
       listRef,
+      removing,
+      confirmRef,
       //use-mode
       modeIcon,
       changeMode,
@@ -112,6 +157,9 @@ export default {
       show,
       getCurrentIcon,
       selectItem,
+      removeSong,
+      showConfirm,
+      confirmClear,
     };
   },
 };

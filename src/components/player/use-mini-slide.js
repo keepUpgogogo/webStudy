@@ -29,7 +29,6 @@ export default function () {
   onMounted(() => {
     let sliderVal
     watch(sliderShow, async (nweSliderShow) => {
-      console.log(sliderWrapperRef.value);
       if (nweSliderShow) {
         await nextTick()
         if (!sliderVal) {
@@ -50,10 +49,9 @@ export default function () {
           sliderVal.refresh()
         }
 
-        sliderVal.on('slidePageChanged', ({
-          pageX
-        }) => {
+        sliderVal.on('slidePageChanged', ({pageX}) => {
           store.commit('setCurrentIndex', pageX)
+          store.commit('setPlayingState', true)
         })
         sliderVal.goToPage(currentIndex.value, 0, 0)
       }
@@ -66,7 +64,12 @@ export default function () {
         sliderVal.goToPage(newIndex, 0, 0)
       }
     })
-
+    watch(playlist,async(newList)=>{
+      if(sliderVal&&sliderShow.value &&newList.length){
+        await nextTick
+        sliderVal.refresh()
+      }
+    })
   })
 
   onUnmounted(() => {
