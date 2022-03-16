@@ -26,7 +26,7 @@
       @scroll="onScroll"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs" @select="selectItem"></song-list>
+        <song-list :songs="songs" @select="selectItem" :rank = "rank"></song-list>
       </div>
     </scroll>
   </div>
@@ -35,7 +35,7 @@
 <script>
 import SongList from "@/components/base/song-list/song-list";
 import Scroll from "@/components/base/scroll/scroll";
-import { mapActions } from "vuex";
+import { mapActions,mapState } from "vuex";
 
 const RESERVED_HEIGHT = 40;
 
@@ -56,6 +56,7 @@ export default {
     loading: Boolean,
     title: String,
     pic: String,
+    rank:Boolean
   },
   data() {
     return {
@@ -100,8 +101,10 @@ export default {
       };
     },
     scrollStyle() {
+      const bottom = this.playlist.length ? '60px':'0'
       return {
         top: `${this.imageHeight}px`,
+        bottom
       };
     },
     filterStyle() {
@@ -117,6 +120,7 @@ export default {
         backdropFilter: `blur(${blur}px)`,
       };
     },
+    ...mapState(['playlist'])
   },
   methods: {
     goBack() {

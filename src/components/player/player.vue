@@ -232,7 +232,6 @@ export default {
         audioEl.play();
         playLyric();
       } else {
-        console.log("2");
         audioEl.pause();
         stopLyric();
       }

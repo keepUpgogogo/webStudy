@@ -1,7 +1,7 @@
 <template>
   <index-list
-    :data="singers"
     class="singer"
+    :data="singers"
     v-loading="!singers.length"
     @select="selectSinger"
   ></index-list>

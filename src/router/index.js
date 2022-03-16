@@ -9,6 +9,8 @@ import Search from '@/views/search'
 import Singer from '@/views/singer'
 import Toplist from '@/views/top-list'
 import singerDetail from "@/views/singer-detail"
+import Album from '@/views/album'
+import TopDetail from "@/views/top-detail"
 const routes = [
   // 当访问根路径时，默认转到/recommend路径
   {
@@ -17,7 +19,12 @@ const routes = [
   },
   {
     path: '/recommend',
-    component: Recommand
+    component: Recommand,
+    children:[
+      {path:':id',
+      component:Album,
+    }
+    ]
   },
   {
     path: '/search',
@@ -35,7 +42,13 @@ const routes = [
   },
   {
     path: '/top-list',
-    component: Toplist
+    component: Toplist,
+    children:[
+      {
+        path:':id',
+        component:TopDetail,
+      }
+    ]
   }
 ]
 
