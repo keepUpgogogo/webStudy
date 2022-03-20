@@ -1,7 +1,7 @@
 <template>
   <div class="search-input">
     <i class="icon-search"></i>
-    <input class="input-inner" v-model="query" />
+    <input class="input-inner" v-model="query" :placeholder="placeholder" />
     <i class="icon-dismiss" v-show="query" @click="clear"></i>
   </div>
 </template>
@@ -13,16 +13,20 @@ export default {
   name: "search-input",
   props: {
     modelValue: String,
+    placeholder: {
+      type: String,
+      default: "搜索歌曲、歌手",
+    },
   },
   data() {
     return {
       query: this.modelValue,
     };
   },
-  methods:{
-    clear(){
-      this.query =''
-    }
+  methods: {
+    clear() {
+      this.query = "";
+    },
   },
   created() {
     this.$watch(
@@ -32,11 +36,10 @@ export default {
       })
     );
 
-    this.$watch("modelValue",()=>{
-      this.query = this.modelValue
-    })
+    this.$watch("modelValue", () => {
+      this.query = this.modelValue;
+    });
   },
-
 };
 </script>
 
