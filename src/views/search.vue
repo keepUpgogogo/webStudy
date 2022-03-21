@@ -3,27 +3,43 @@
     <div class="search-input-wrapper">
       <search-input v-model="query"></search-input>
     </div>
-    <div class="search-content" v-show="!query">
-      <div class="hot-keys">
-        <h1 class="title">热门搜索</h1>
-        <ul>
-          <li
-            class="item"
-            v-for="item in hotKeys"
-            :key="item.id"
-            @click="addQuery(item.key)"
+    <scroll class="search-content" v-show="!query" ref="scrollRef">
+      <div>
+        <div class="hot-keys">
+          <h1 class="title">热门搜索</h1>
+          <ul>
+            <li
+              class="item"
+              v-for="item in hotKeys"
+              :key="item.id"
+              @click="addQuery(item.key)"
+            >
+              <span>{{ item.key }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="search-history">
+          <h1 class="title">
+            <span class="text">搜索历史</span>
+            <span class="clear" @click="showConfirm">
+              <i class="icon-clear"></i>
+            </span>
+          </h1>
+          <confirm
+            ref="confirmRef"
+            text="是否清空所有搜索历史"
+            confirm-btn-text="清空"
+            @confirm="clearSearch"
           >
-            <span>{{ item.key }}</span>
-          </li>
-        </ul>
+          </confirm>
+          <search-list
+            :searches="searchHistory"
+            @select="addQuery"
+            @delete="deleteSearch"
+          ></search-list>
+        </div>
       </div>
-      <div class="search-history">
-        <h1 class="title">
-          <span class="text">搜索历史</span>
-        </h1>
-        <search-list :searches="searchHistory"></search-list>
-      </div>
-    </div>
+    </scroll>
     <div class="search-result" v-show="query">
       <suggest
         :query="query"
@@ -43,10 +59,11 @@
 import searchInput from "../components/search/search-input.vue";
 import Suggest from "@/components/search/suggest";
 import SearchList from "../components/search/search-list.vue";
-
+import Scroll from "@/components/wrap-scroll";
 import storage from "good-storage";
+import Confirm from "@/components/base/confirm/confirm";
 
-import { ref, computed } from "vue";
+import { ref, computed, nextTick, watch } from "vue";
 import { getHotKeys } from "@/service/search";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -54,7 +71,7 @@ import { SINGER_KEY } from "@/assets/js/constant";
 import useSearchHistory from "@/components/search/use-search-history";
 
 export default {
-  components: { searchInput, Suggest, SearchList },
+  components: { searchInput, Suggest, SearchList, Scroll ,Confirm},
   name: "search",
   setup() {
     //variable
@@ -64,13 +81,26 @@ export default {
     const selectedSinger = ref(null);
     const router = useRouter();
     const searchHistory = computed(() => store.state.searchHistory);
+    const scrollRef = ref(null);
+    const confirmRef = ref(null);
     //use-search-history
-    const {saveSearch} =useSearchHistory()
+    const { saveSearch, deleteSearch,clearSearch } = useSearchHistory();
     getHotKeys().then((result) => {
       hotKeys.value = result.hotKeys;
     });
 
+    watch(query, async (newQuery) => {
+      if (!newQuery) {
+        await nextTick();
+        refreshScroll();
+      }
+    });
+
     //methods
+    function refreshScroll() {
+      scrollRef.value.scroll.refresh();
+    }
+
     function addQuery(s) {
       query.value = s.trim();
     }
@@ -93,13 +123,24 @@ export default {
     function cacheSinger(singer) {
       storage.session.set(SINGER_KEY, singer);
     }
+
+    function showConfirm() {
+        confirmRef.value.show()
+      }
     return {
+      confirmRef,
+      scrollRef,
       query,
       hotKeys,
       addQuery,
       selectSong,
       selectSinger,
       searchHistory,
+      selectedSinger,
+      showConfirm,
+      //search
+      deleteSearch,
+      clearSearch
     };
   },
 };
