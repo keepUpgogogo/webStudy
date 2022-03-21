@@ -132,6 +132,7 @@ import useCd from "./use-cd";
 import useLyric from "./use-lyric";
 import scroll from "@/components/base/scroll/scroll";
 import useMiddleInteractive from "./use-middle-interactive";
+import usePlayHistory from "./use-play-history";
 import useAnimation from "./use-animation";
 import MiniPlayer from "./mini-player.vue";
 export default {
@@ -173,6 +174,7 @@ export default {
     } = useMiddleInteractive();
     const { cdWrapperRef, enter, afterEnter, leave, afterLeave } =
       useAnimation();
+    const { savePlay} = usePlayHistory()
     // 计算属性
     //全屏播放属性
     const fullScreen = computed(() => {
@@ -297,6 +299,7 @@ export default {
       if (songReady.value) return;
       songReady.value = true;
       playLyric();
+      savePlay(currentSong.value)
     }
     function error() {
       songReady.value = true;
