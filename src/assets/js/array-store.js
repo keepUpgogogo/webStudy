@@ -2,7 +2,10 @@ import storage from "good-storage";
 
 function innertArray(arr, val, compare, maxLen) {
   const index = arr.findIndex(compare)
-  if (index > -1) return
+  if (index === 0) return
+  if (index >= 1) {
+    arr.splice(index, 1)
+  }
   arr.unshift(val)
   if (maxLen && arr.length > maxLen) {
     arr.pop()
@@ -40,3 +43,6 @@ export function clear(key) {
   return []
 }
 
+export function saveAll(items,key) {
+  storage.set(key,items)
+}

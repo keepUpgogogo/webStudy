@@ -11,6 +11,8 @@ import Toplist from '@/views/top-list'
 import singerDetail from "@/views/singer-detail"
 import Album from '@/views/album'
 import TopDetail from "@/views/top-detail"
+import UserCenter from "@/views/user-center"
+
 const routes = [
   // 当访问根路径时，默认转到/recommend路径
   {
@@ -20,41 +22,40 @@ const routes = [
   {
     path: '/recommend',
     component: Recommand,
-    children:[
-      {path:':id',
-      component:Album,
-    }
-    ]
+    children: [{
+      path: ':id',
+      component: Album,
+    }]
   },
   {
     path: '/search',
     component: Search,
-    children: [
-      {
-        path: ':id',
-        component: singerDetail
-      }
-    ]
+    children: [{
+      path: ':id',
+      component: singerDetail
+    }]
   },
   {
     path: '/singer',
     component: Singer,
-    children:[
-      {
-        path:':id',
-        component:singerDetail,
-      }
-    ]
+    children: [{
+      path: ':id',
+      component: singerDetail,
+    }]
   },
   {
     path: '/top-list',
     component: Toplist,
-    children:[
-      {
-        path:':id',
-        component:TopDetail,
-      }
-    ]
+    children: [{
+      path: ':id',
+      component: TopDetail,
+    }]
+  },
+  {
+    path: '/user',
+    components: {
+      user: UserCenter
+    }
   }
 ]
 

@@ -1,16 +1,13 @@
 <template>
-  <index-list
-    class="singer"
-    :data="singers"
-    v-loading="!singers.length"
-    @select="selectSinger"
-  ></index-list>
-  <!-- 路由的动态载入 -->
-  <router-view v-slot="{ Component }">
-    <transition appear name="slide">
-      <component :is="Component" :data="selectedSinger" />
-    </transition>
-  </router-view>
+  <div v-loading="!singers.length" class="singer" >
+    <index-list :data="singers" @select="selectSinger" ss ></index-list>
+    <!-- 路由的动态载入 -->
+    <router-view v-slot="{ Component }">
+      <transition appear name="slide">
+        <component :is="Component" :data="selectedSinger" />
+      </transition>
+    </router-view>
+  </div>
 </template>
 
 <script>

@@ -1,5 +1,4 @@
 <template>
-  <div>
     <scroll
       class="index-list"
       :probe-type="3"
@@ -44,7 +43,6 @@
         </ul>
       </div>
     </scroll>
-  </div>
 </template>
 
 <script>

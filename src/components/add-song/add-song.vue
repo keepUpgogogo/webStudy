@@ -56,12 +56,12 @@
           >
           </suggest>
         </div>
-        <!-- <message ref="messageRef">
+        <message ref="messageRef">
           <div class="message-title">
             <i class="icon-ok"></i>
             <span class="text">1首歌曲已经添加到播放列表</span>
           </div>
-        </message> -->
+        </message>
       </div>
     </transition>
   </teleport>
@@ -74,7 +74,7 @@
   import Scroll from '@/components/base/scroll/scroll'
   import SongList from '@/components/base/song-list/song-list'
   import SearchList from '@/components/base/search-list/search-list'
-  // import Message from '@/components/base/message/message'
+  import Message from '@/components/base/message/message'
   import { ref, computed, nextTick, watch } from 'vue'
   import { useStore } from 'vuex'
   import useSearchHistory from '@/components/search/use-search-history'
@@ -88,14 +88,14 @@
       Scroll,
       SongList,
       SearchList,
-      // Message
+      Message
     },
     setup() {
       const visible = ref(false)
       const query = ref('')
       const currentIndex = ref(0)
-      // const scrollRef = ref(null)
-      // const messageRef = ref(null)
+      const scrollRef = ref(null)
+      const messageRef = ref(null)
 
       const store = useStore()
       const searchHistory = computed(() => store.state.searchHistory)
@@ -103,27 +103,27 @@
 
       const { saveSearch } = useSearchHistory()
 
-      // watch(query, async () => {
-      //   if (!query.value) {
-      //     await nextTick()
-      //     refreshScroll()
-      //   }
-      // })
+      watch(query, async () => {
+        if (!query.value) {
+          await nextTick()
+          refreshScroll()
+        }
+      })
 
       async function show() {
         visible.value = true
 
-        // await nextTick()
-        // refreshScroll()
+        await nextTick()
+        refreshScroll()
       }
 
       function hide() {
         visible.value = false
       }
 
-      // function refreshScroll() {
-      //   scrollRef.value.scroll.refresh()
-      // }
+      function refreshScroll() {
+        scrollRef.value.scroll.refresh()
+      }
 
       function addQuery(s) {
         query.value = s
@@ -143,15 +143,15 @@
         showMessage()
       }
 
-      // function showMessage() {
-      //   messageRef.value.show()
-      // }
+      function showMessage() {
+        messageRef.value.show()
+      }
 
       return {
         visible,
         query,
-        // scrollRef,
-        // messageRef,
+        scrollRef,
+        messageRef,
         currentIndex,
         searchHistory,
         playHistory,

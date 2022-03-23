@@ -32,12 +32,13 @@
         </div>
       </div>
     </scroll>
-  </div>
-  <router-view v-slot="{ Component }">
+      <router-view v-slot="{ Component }">
     <transition appear name="slide">
       <component :is="Component" :data="selectedAlbum" />
     </transition>
   </router-view>
+  </div>
+
 </template>
 
 <script>
