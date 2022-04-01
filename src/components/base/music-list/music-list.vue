@@ -51,7 +51,6 @@ export default {
       default() {
         return [];
       },
-      scrollY: 0,
     },
     loading: Boolean,
     title: String,
@@ -82,7 +81,6 @@ export default {
       let paddingTop = "70%";
       let height = 0;
       let scale = 1;
-
       if (scrollY < 0) {
         scale = 1 + Math.abs(scrollY / this.imageHeight);
       }

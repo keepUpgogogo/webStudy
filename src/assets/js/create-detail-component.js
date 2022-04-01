@@ -1,11 +1,15 @@
 import MusicList from '@/components/base/music-list/music-list'
 import storage from 'good-storage'
-import { processSongs } from '@/service/song'
+import {
+  processSongs
+} from '@/service/song'
 
 export default function createDetailComponent(name, key, fetch) {
   return {
     name,
-    components: { MusicList },
+    components: {
+      MusicList
+    },
     props: {
       data: Object
     },
